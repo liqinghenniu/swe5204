@@ -14,12 +14,18 @@ workflows:
           flutter build apk --release
       - name: Install Firebase CLI
         script: |
+          # 使用文件1中提供的Firebase CLI安装命令
           curl -sL https://firebase.tools | bash
       - name: Firebase login
         script: |
           firebase login:ci --no-localhost
       - name: Distribute APK to Firebase App Distribution
         script: |
+          # 确保路径是相对于项目根目录的
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
           --release-notes "Release notes here" \
           --groups "test-group" # Replace with your Firebase App Distribution group name
+    artifacts:
+      files:
+        
+        - AutoCalc/assign.swe5204.apk
