@@ -26,6 +26,4 @@ workflows:
           --release-notes "Release notes here" \
           --groups "test-group" # Replace with your Firebase App Distribution group name
     artifacts:
-      files:
-        
-        - AutoCalc/assign.swe5204.apk
+   
