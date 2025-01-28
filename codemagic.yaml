@@ -1,28 +1,23 @@
 workflows:
-  build-and-distribute-android-app:
-    name: Build and Distribute Android App
+  android-firebase-distribution:
+    name: Android Firebase Distribution
     max_build_duration: 60
-    environment:
-      flutter: 2.2.3
-      node: 14
-    scripts:
-      - name: Install dependencies
-        script: |
-          flutter pub get
-      - name: Build APK
-        script: |
-          flutter build apk --release
-      - name: Install Firebase CLI
-        script: |
-          curl -sL https://firebase.tools | bash
-      - name: Firebase login
-        script: |
-          firebase login:ci --no-localhost
-      - name: Distribute APK to Firebase App Distribution
-        script: |
-          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-          --release-notes "Release notes here" \
-          --groups "test-group" # Replace with your Firebase App Distribution group name
-    artifacts:
-      files:
-        - "AutoCalc/assign.swe5204.apk"
+    env:
+      variables:
+        # 定义环境变量，如 Firebase 项目 ID 和 API 密钥等
+        FIREBASE_PROJECT_ID: "your-firebase-project-id"
+        FIREBASE_APP_ID: "your-firebase-app-id"
+        FIREBASE_CLIENT_EMAIL: "firebase-adminsdk-client-email"
+        FIREBASE_PRIVATE_KEY: "firebase-adminsdk-private-key"
+      nodes:
+        - name: Build and Distribute APK
+          script:
+            # 设置 Gradle 环境变量
+            - export GRADLE_OPTS="-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError"
+            # 构建 APK
+            - ./gradlew assembleRelease
+            # 构建完成后，安装 Firebase CLI 并登录
+            - curl -sL https://firebase.tools | bash
+            - firebase login:ci
+            # 上传 APK 到 Firebase App Distribution
+            - firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --release-notes "Release notes here"
