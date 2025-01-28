@@ -1,3 +1,4 @@
+
 workflows:
   build-and-distribute-android-app:
     name: Build and Distribute Android App
@@ -5,25 +6,27 @@ workflows:
     environment:
       flutter: 2.2.3
       node: 14
+      variables:
+        PATH: "$PATH:/path/to/flutter/bin"  # 确保添加正确的Flutter SDK路径
     scripts:
+      - name: Clean cache and build files
+        script: |
+          flutter clean
+          rm -rf .pub-cache
       - name: Install dependencies
         script: |
-          flutter pub get
+          flutter pub get --verbose
       - name: Build APK
         script: |
           flutter build apk --release
       - name: Install Firebase CLI
         script: |
-          # 使用文件1中提供的Firebase CLI安装命令
           curl -sL https://firebase.tools | bash
       - name: Firebase login
         script: |
           firebase login:ci --no-localhost
       - name: Distribute APK to Firebase App Distribution
         script: |
-          # 确保路径是相对于项目根目录的
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
           --release-notes "Release notes here" \
           --groups "test-group" # Replace with your Firebase App Distribution group name
-    artifacts:
-   
