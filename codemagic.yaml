@@ -25,4 +25,4 @@ workflows:
           --groups "test-group" # Replace with your Firebase App Distribution group name
     artifacts:
       files:
-        - "swe5204/AutoCalc/swe5204.assign.apk"
+        - swe5204/AutoCalc/swe5204.assign.apk
