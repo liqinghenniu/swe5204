@@ -23,6 +23,3 @@ workflows:
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
           --release-notes "Release notes here" \
           --groups "test-group" # Replace with your Firebase App Distribution group name
-    artifacts:
-      files:
-        - swe5204/AutoCalc/swe5204.assign.apk
