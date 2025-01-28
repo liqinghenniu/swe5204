@@ -6,8 +6,7 @@ workflows:
     environment:
       flutter: 2.2.3
       node: 14
-      variables:
-        PATH: "$PATH:/path/to/flutter/bin"  # 确保添加正确的Flutter SDK路径
+    
     scripts:
       - name: Clean cache and build files
         script: |
