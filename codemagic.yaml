@@ -1,0 +1,33 @@
+workflows:
+  build-and-distribute-android-app:
+    name: Build and Distribute Android App
+    max_build_duration: 60
+    environment:
+      flutter: 2.2.3
+      node: 14
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+          echo "y" | android update sdk --no-ui --all --filter "build-tools-30.0.3"
+      - name: Build APK
+        script: |
+          flutter build apk --release
+      - name: Install Firebase CLI
+        script: |
+          wget -q -O - https://dl.google.com/linux/chrome/chrome签名的key | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install google-cloud-sdk
+          sudo apt-get install firebase-tools
+      - name: Firebase login
+        script: |
+          firebase login:ci --no-localhost
+      - name: Distribute APK to Firebase App Distribution
+        script: |
+          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+          --release-notes "Release notes here" \
+          --groups "test-group" # Replace with your Firebase App Distribution group name
+    artifacts:
+      files:
+        - build/app/outputs/flutter-apk/app-release.apk
