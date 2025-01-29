@@ -1,31 +1,15 @@
-
 workflows:
-  build-and-distribute-android-app:
-    name: Build and Distribute Android App
-    max_build_duration: 60
+  default-workflow:
+    name: Default Workflow
     environment:
-      flutter: 2.2.3
-      node: 14
-    
+      vars:
+        NODE_VERSION: "16" # Set Node.js version
     scripts:
-      - name: Clean cache and build files
-        script: |
-          flutter clean
-          rm -rf .pub-cache
-      - name: Install dependencies
-        script: |
-          flutter pub get --verbose
-      - name: Build APK
-        script: |
-          flutter build apk --release
-      - name: Install Firebase CLI
-        script: |
-          curl -sL https://firebase.tools | bash
-      - name: Firebase login
-        script: |
-          firebase login:ci --no-localhost
-      - name: Distribute APK to Firebase App Distribution
-        script: |
-          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-          --release-notes "Release notes here" \
-          --groups "test-group" # Replace with your Firebase App Distribution group name
+      - npm install # Install dependencies
+      - npm run build # Build the project
+    artifacts:
+      - build/ # Upload built files
+    publishing:
+      email:
+        recipients:
+          - kengyap@upm.edu.my # Add teacher's email for testing
