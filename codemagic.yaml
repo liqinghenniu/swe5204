@@ -2,14 +2,21 @@ workflows:
   default-workflow:
     name: Default Workflow
     environment:
-      vars:
+     vars:
         NODE_VERSION: "16" # Set Node.js version
+      flutter: "2.2.3"
+      node: "14"
     scripts:
-      - npm install # Install dependencies
-      - npm run build # Build the project
+     - name: Clear npm cache
+       script: npm cache clean --force
+     - name: Install dependencies
+       script: npm install --verbose
+     - name: Build the project
+       script: npm run build
     artifacts:
-      - build/ # Upload built files
+      files:
+        - build/
     publishing:
       email:
-        recipients:
-          - kengyap@upm.edu.my # Add teacher's email for testing
+         recipients:
+           - kengyap@upm.edu.my # Add teacher's email for testing
